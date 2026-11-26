@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Student Marks Calculator</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #e8edf5, #f5f7fb);
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: #252d3a;
+        }
+
+        .container {
+            max-width: 1050px;
+            margin: auto;
+            background: white;
+            padding: 45px;
+            border-radius: 18px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+            border: 1px solid #e5e9f0;
+        }
+
+        /* Main Heading */
+
+        h1 {
+            text-align: center;
+            font-size: 34px;
+            color: #172f50;
+            margin-bottom: 8px;
+        }
+
+        .student-id {
+            text-align: center;
+            font-size: 14px;
+            color: #66809e;
+            letter-spacing: 1.5px;
+            font-weight: 600;
+            margin-bottom: 40px;
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 24px;
+            color: #263c58;
+            margin-bottom: 30px;
+        }
+
+        /* Form Labels */
+
+        .field-label {
+            display: block;
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #34445b;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #d4dce8;
+            border-radius: 10px;
+            background: #f3f6fc;
+            font-size: 16px;
+            margin-bottom: 28px;
+            transition: 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #2763a0;
+            box-shadow: 0 0 6px rgba(39,99,160,0.2);
+        }
+
+        /* Gender and Course */
+
+        .options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .options label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        input[type="radio"],
+        input[type="checkbox"] {
+            accent-color: #2763a0;
+            width: 17px;
+            height: 17px;
+            cursor: pointer;
+        }
+
+        /* Table Design */
+
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 25px;
+        }
+
+        th, td {
+            border: 1px solid #e0e5ed;
+            padding: 16px;
+            text-align: left;
+        }
+
+        th {
+            background: #eaf0f9;
+            color: #263f61;
+            font-weight: 600;
+        }
+
+        tbody tr:hover {
+            background: #f7f9fc;
+        }
+
+        td input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d4dce8;
+            border-radius: 9px;
+            font-size: 16px;
+            background: white;
+        }
+
+        .average-row {
+            background: #f0f3f8;
+            font-weight: 600;
+        }
+
+        /* Buttons */
+
+        button {
+            display: block;
+            margin: 38px auto 0;
+            padding: 15px 48px;
+            background: #24558a;
+            color: white;
+            border: none;
+            border-radius: 9px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #173d68;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 12px rgba(0,0,0,0.15);
+        }
+
+        button:active {
+            transform: scale(0.97);
+        }
+
+        /* Result Page */
+
+        .hidden {
+            display: none;
+        }
+
+        .result-info p {
+            font-size: 17px;
+            margin: 25px 0;
+            color: #34445b;
+        }
+
+        .total {
+            text-align: center;
+            font-size: 20px;
+            font-weight: 600;
+            margin-top: 28px;
+            color: #263f61;
+        }
+
+        .success {
+            text-align: center;
+            color: #39805d;
+            font-size: 17px;
+            font-weight: 600;
+            margin-top: 28px;
+        }
+
+        /* Mobile Responsive */
+
+        @media(max-width: 600px) {
+
+            body {
+                padding: 15px 10px;
+            }
+
+            .container {
+                padding: 22px 15px;
+            }
+
+            h1 {
+                font-size: 25px;
+            }
+
+            h2 {
+                font-size: 20px;
+            }
+
+            .student-id {
+                font-size: 12px;
+                margin-bottom: 30px;
+            }
+
+            th, td {
+                padding: 10px;
+                font-size: 13px;
+            }
+
+            td input {
+                padding: 9px;
+                font-size: 14px;
+                min-width: 75px;
+            }
+
+            .options {
+                gap: 15px;
+            }
+
+            .total {
+                font-size: 17px;
+            }
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <!-- INPUT PAGE -->
+
+    <div class="container" id="inputPage">
+
+        <h1>Student Marks Calculator</h1>
+
+        <p class="student-id">SAM/IT/2025/F/0008</p>
+
+        <form id="marksForm">
+
+            <label class="field-label">Name</label>
+
+            <input type="text" id="name"
+                   placeholder="Enter Student Name" required>
+
+            <label class="field-label">Gender</label>
+
+            <div class="options">
+
+                <label>
+                    <input type="radio" name="gender"
+                           value="Male" required>
+                    Male
+                </label>
+
+                <label>
+                    <input type="radio" name="gender"
+                           value="Female">
+                    Female
+                </label>
+
+            </div>
+
+            <label class="field-label">Course</label>
+
+            <div class="options">
+
+                <label>
+                    <input type="checkbox" name="course"
+                           value="HNDIT">
+                    HNDIT
+                </label>
+
+                <label>
+                    <input type="checkbox" name="course"
+                           value="HNDSE">
+                    HNDSE
+                </label>
+
+                <label>
+                    <input type="checkbox" name="course"
+                           value="HNDJA">
+                    HNDJA
+                </label>
+
+            </div>
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>Subject</th>
+                            <th>Marks (0-100)</th>
+                            <th>Grade</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        <tr>
+                            <td>Machine Learning</td>
+                            <td>
+                                <input type="number" id="mark1"
+                                       min="0" max="100" required>
+                            </td>
+                            <td>-</td>
+                        </tr>
+
+                        <tr>
+                            <td>Computer Network</td>
+                            <td>
+                                <input type="number" id="mark2"
+                                       min="0" max="100" required>
+                            </td>
+                            <td>-</td>
+                        </tr>
+
+                        <tr>
+                            <td>Architecture</td>
+                            <td>
+                                <input type="number" id="mark3"
+                                       min="0" max="100" required>
+                            </td>
+                            <td>-</td>
+                        </tr>
+
+                        <tr class="average-row">
+                            <td colspan="2">Average</td>
+                            <td>-</td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <button type="submit">Calculate</button>
+
+        </form>
+
+    </div>
+
+
+    <!-- RESULT PAGE -->
+
+    <div class="container hidden" id="resultPage">
+
+        <h1>Student Marks & Grade Calculator</h1>
+
+        <p class="student-id">SAM/IT/2025/F/0008</p>
+
+        <h2>Student Results</h2>
+
+        <div class="result-info">
+
+            <p>Name: <span id="resultName"></span></p>
+
+            <p>Gender: <span id="resultGender"></span></p>
+
+            <p>Course: <span id="resultCourse"></span></p>
+
+        </div>
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Marks (0-100)</th>
+                        <th>Grade</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td>Machine Learning</td>
+                        <td id="resultMark1"></td>
+                        <td id="grade1"></td>
+                    </tr>
+
+                    <tr>
+                        <td>Computer Network</td>
+                        <td id="resultMark2"></td>
+                        <td id="grade2"></td>
+                    </tr>
+
+                    <tr>
+                        <td>Architecture</td>
+                        <td id="resultMark3"></td>
+                        <td id="grade3"></td>
+                    </tr>
+
+                    <tr class="average-row">
+                        <td colspan="2">Average</td>
+                        <td id="average"></td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <p class="total">
+            Total Marks: <span id="total"></span> / 300
+        </p>
+
+        <p class="success" id="successMessage"></p>
+
+        <button type="button" onclick="goBack()">Back</button>
+
+    </div>
+
+
+    <script>
+
+        // Grade Calculation
+
+        function getGrade(mark) {
+
+            if (mark >= 75) {
+                return "A";
+            }
+
+            else if (mark >= 65) {
+                return "B";
+            }
+
+            else if (mark >= 55) {
+                return "C";
+            }
+
+            else if (mark >= 40) {
+                return "S";
+            }
+
+            else {
+                return "F";
+            }
+
+        }
+
+
+        // Calculate Button
+
+        document.getElementById("marksForm")
+        .addEventListener("submit", function(event) {
+
+            event.preventDefault();
+
+            let name = document.getElementById("name").value;
+
+            let gender = document.querySelector(
+                'input[name="gender"]:checked'
+            ).value;
+
+            let courses = document.querySelectorAll(
+                'input[name="course"]:checked'
+            );
+
+            if (courses.length === 0) {
+
+                alert("Please select a course!");
+
+                return;
+
+            }
+
+            let course = Array.from(courses)
+                .map(item => item.value)
+                .join(", ");
+
+            let mark1 = Number(document.getElementById("mark1").value);
+
+            let mark2 = Number(document.getElementById("mark2").value);
+
+            let mark3 = Number(document.getElementById("mark3").value);
+
+            let marks = [mark1, mark2, mark3];
+
+            if (marks.some(mark =>
+                !Number.isFinite(mark) || mark < 0 || mark > 100
+            )) {
+
+                alert("Please enter marks between 0 and 100!");
+
+                return;
+
+            }
+
+            // Total and Average
+
+            let total = mark1 + mark2 + mark3;
+
+            let average = total / 3;
+
+            // Student Details
+
+            document.getElementById("resultName").textContent = name;
+
+            document.getElementById("resultGender").textContent = gender;
+
+            document.getElementById("resultCourse").textContent = course;
+
+            // Display Marks
+
+            document.getElementById("resultMark1").textContent = mark1;
+
+            document.getElementById("resultMark2").textContent = mark2;
+
+            document.getElementById("resultMark3").textContent = mark3;
+
+            // Display Grades
+
+            document.getElementById("grade1").textContent = getGrade(mark1);
+
+            document.getElementById("grade2").textContent = getGrade(mark2);
+
+            document.getElementById("grade3").textContent = getGrade(mark3);
+
+            // Display Average and Total
+
+            document.getElementById("average").textContent =
+                average.toFixed(2);
+
+            document.getElementById("total").textContent = total;
+
+            // Success Message
+
+            document.getElementById("successMessage").textContent =
+                name + "'s results calculated successfully.";
+
+            // Change Page
+
+            document.getElementById("inputPage")
+                .classList.add("hidden");
+
+            document.getElementById("resultPage")
+                .classList.remove("hidden");
+
+        });
+
+
+        // Back Button
+
+        function goBack() {
+
+            document.getElementById("resultPage")
+                .classList.add("hidden");
+
+            document.getElementById("inputPage")
+                .classList.remove("hidden");
+
+        }
+
+    </script>
+
+</body>
+
+</html>
